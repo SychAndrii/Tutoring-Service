@@ -1,0 +1,18 @@
+import { db } from "./firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect } from "react";
+
+useEffect(() => {
+async function fetchData() {
+    try {
+    const querySnapshot = await getDocs(collection(db, "tutors"));
+
+    querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} =>`, doc.data());
+    });
+    } catch (e) {
+    console.log("Error fetching data: ", e);
+    }
+}
+fetchData();
+}, []);
