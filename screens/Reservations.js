@@ -28,7 +28,7 @@ export default function Reservations({ userData, updateUserData }) {
       const data = querySnapshot.docs[0].data();
       setBookings(data.bookings);
       updateUserData(data);
-      console.log("Refreshed Data");
+      // console.log("Refreshed Data");
     }
   };
 

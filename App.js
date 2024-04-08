@@ -29,14 +29,14 @@ export default function App() {
 
   const logInUser = async () => {
     try {
-      console.log("Email: ", email);
-      console.log("Password: ", password);
+      // console.log("Email: ", email);
+      // console.log("Password: ", password);
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
-      console.log("User: ", userCredential.user.email);
+      // console.log("User: ", userCredential.user.email);
 
       // Verify if someone is a tutee or a tutor
       const q = query(collection(db, "tutees"), where("email", "==", email));

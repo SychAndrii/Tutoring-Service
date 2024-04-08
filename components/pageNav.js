@@ -1,18 +1,14 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import { Button, StyleSheet } from "react-native";
-import Screen1 from "../screens/screen1";
-import Screen2 from "../screens/screen2";
+import { StyleSheet } from "react-native";
 import Reservations from "../screens/Reservations";
-import Screen4 from "../screens/screen4";
+import BrowseTutors from "../screens/BrowseTutors";
 import LogOutPressable from "./logOutPressable";
-import { auth } from "../firebaseConfig";
-import { signOut } from "firebase/auth";
+import { Entypo } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
 
 /**
  *
@@ -22,42 +18,24 @@ const Stack = createStackNavigator();
  * @returns
  */
 export default function PageNav({ onSignOut, userData, updateUserData }) {
-  const StackContainerComponent = () => {
-    return (
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: { backgroundColor: "royalblue" },
-          headerTintColor: "white",
-        }}
-      >
-        <Stack.Screen
-          name="First Screen"
-          component={Screen1}
-          options={{
-            headerRight: () => {
-              return <LogOutPressable onSignOut={onSignOut} />;
-            },
-          }}
-        />
-        <Stack.Screen
-          name="Second Screen"
-          component={Screen2}
-          options={{
-            headerRight: () => {
-              return <LogOutPressable onSignOut={onSignOut} />;
-            },
-          }}
-        />
-      </Stack.Navigator>
-    );
-  };
   return (
     <NavigationContainer>
       <Tab.Navigator
-        screenOptions={{
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            if (route.name == "Reservations") {
+              return (
+                <Ionicons name="newspaper-sharp" size={24} color="black" />
+              );
+            }
+            if (route.name === "Browse Tutors") {
+              return <Entypo name="book" size={24} color="black" />;
+            }
+          },
+          tabBarActiveTintColor: "royalblue",
           headerStyle: { backgroundColor: "royalblue" },
           headerTintColor: "white",
-        }}
+        })}
         initialRouteName="Home Screen"
       >
         <Tab.Screen
@@ -72,19 +50,11 @@ export default function PageNav({ onSignOut, userData, updateUserData }) {
           }}
         />
         <Tab.Screen
-          name="Home Screen"
-          component={Screen4}
+          name="Browse Tutors"
+          children={() => (
+            <BrowseTutors userData={userData} updateUserData={updateUserData} />
+          )}
           options={{
-            headerRight: () => {
-              return <LogOutPressable onSignOut={onSignOut} />;
-            },
-          }}
-        />
-        <Tab.Screen
-          name="ABC"
-          component={StackContainerComponent}
-          options={{
-            headerShown: false,
             headerRight: () => {
               return <LogOutPressable onSignOut={onSignOut} />;
             },
