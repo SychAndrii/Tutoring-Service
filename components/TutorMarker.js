@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Marker } from "react-native-maps";
 import { useIsFocused } from "@react-navigation/native";
 

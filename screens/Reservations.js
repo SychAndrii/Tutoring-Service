@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, FlatList, StyleSheet } from "react-native";
+import { View, FlatList, StyleSheet } from "react-native";
 import SingleBooking from "../components/singleBooking";
 import { useIsFocused } from "@react-navigation/native";
 import { db } from "../firebaseConfig";

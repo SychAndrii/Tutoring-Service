@@ -69,21 +69,27 @@ export default function BrowseTutors({ userData, updateUserData }) {
 
   return (
     <View>
-      <MapView
-        style={{ height: "100%", width: "100%" }}
-        initialRegion={{
-          // latitude: currLocation.coords.latitude,
-          // longitude: currLocation.coords.longitude,
-          latitude: 43.7076,
-          longitude: -79.3924,
-          latitudeDelta: 0.2,
-          longitudeDelta: 0.2,
-        }}
-      >
-        {tutors.map((tutor, index) => (
-          <TutorMarker tutor={tutor} key={index} setTutorInfo={setTutorInfo} />
-        ))}
-      </MapView>
+      {currLocation && (
+        <MapView
+          style={{ height: "100%", width: "100%" }}
+          initialRegion={{
+            latitude: currLocation.coords.latitude,
+            longitude: currLocation.coords.longitude,
+            // latitude: 43.7076,
+            // longitude: -79.3924,
+            latitudeDelta: 0.2,
+            longitudeDelta: 0.2,
+          }}
+        >
+          {tutors.map((tutor, index) => (
+            <TutorMarker
+              tutor={tutor}
+              key={index}
+              setTutorInfo={setTutorInfo}
+            />
+          ))}
+        </MapView>
+      )}
 
       <TutorInfo
         tutor={tutorInfo}

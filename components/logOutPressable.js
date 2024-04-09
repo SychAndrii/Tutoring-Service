@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { auth } from "../firebaseConfig";
 import { signOut } from "firebase/auth";
 import { Pressable, StyleSheet, Text } from "react-native";
-import { useState } from "react";
 
 export default function LogOutPressable({ onSignOut }) {
   const signOutUser = async () => {

@@ -4,14 +4,7 @@ import { auth } from "./firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { db } from "./firebaseConfig";
-import {
-  doc,
-  query,
-  where,
-  getDoc,
-  collection,
-  getDocs,
-} from "firebase/firestore";
+import { query, where, collection, getDocs } from "firebase/firestore";
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);

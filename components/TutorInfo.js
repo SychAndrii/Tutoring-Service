@@ -180,32 +180,10 @@ export default function TutorInfo({
 
       const tutorbooking = constructTutorBooking();
 
-      // Gets latest key in the map
-      let latestUserKey = Math.max(
-        ...Object.keys(userData.bookings).map(Number)
-      ).toString();
+      updatedUserInfo.bookings.push(tuteebooking);
+      //tuteebooking;
 
-      // Gets latest key in the map
-      let latestTutorKey = Math.max(
-        ...Object.keys(tutor.bookings).map(Number)
-      ).toString();
-
-      if (latestUserKey === "-Infinity") {
-        latestUserKey = "0";
-      }
-
-      if (latestTutorKey === "-Infinity") {
-        latestTutorKey = "0";
-      }
-
-      let updatedUserInfo = userData;
-      let updatedTutorInfo = tutor;
-
-      updatedUserInfo.bookings[(parseInt(latestUserKey) + 1).toString()] =
-        tuteebooking;
-
-      updatedTutorInfo.bookings[(parseInt(latestTutorKey) + 1).toString()] =
-        tutorbooking;
+      updatedTutorInfo.bookings.push(tutorbooking);
 
       const tuteesCollection = collection(db, "tutees");
       const tutorsCollection = collection(db, "tutors");
@@ -230,7 +208,9 @@ export default function TutorInfo({
         await updateDoc(tutorToUpdate, updatedTutorInfo);
 
         updateUserData(updatedUserInfo);
-        alert(`Booked session with ${tutor.name.first} ${tutor.name.last}.`);
+        alert(
+          `Booked session with ${tutor.name.first} ${tutor.name.last}. Await confirmation.`
+        );
         setTutorInfo(null);
       } else {
         alert("Error updating user information.");
@@ -255,6 +235,10 @@ export default function TutorInfo({
           <Text>
             <Text style={{ fontWeight: "bold" }}>Tutor Name: </Text>
             {tutor.name.first} {tutor.name.last}
+          </Text>
+          <Text>
+            <Text style={{ fontWeight: "bold" }}>School: </Text>
+            {tutor.schoolName}
           </Text>
           <Text>
             <Text style={{ fontWeight: "bold" }}>Tutor Fee: </Text>${tutor.fee}
@@ -483,7 +467,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
     bottom: 0,
-    backgroundColor: "white", // Choose a background color
+    backgroundColor: "white",
     flex: 1,
     flexDirection: "row",
     padding: 20,
