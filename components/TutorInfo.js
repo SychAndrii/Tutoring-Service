@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -16,6 +16,8 @@ import {
   query,
   getDocs,
 } from "firebase/firestore";
+
+import * as Location from "expo-location";
 
 /**
  *
@@ -61,17 +63,47 @@ export default function TutorInfo({
   const [time, setTime] = useState("");
   const [hours, setHours] = useState("1");
   const [remote, setRemote] = useState("No");
+  const [address, setAddress] = useState("");
+
+  async function translateAddress(location) {
+    try {
+      // create the coordinates object
+      const coords = {
+        latitude: location.latitude,
+        longitude: location.longitude,
+      };
+      // returns an array of LocationGeocodedAddress objects
+      const postalAddresses = await Location.reverseGeocodeAsync(coords, {});
+      const result = postalAddresses[0];
+
+      console.log(`Street: ${result.street}`);
+      console.log(`City: ${result.city}`);
+      console.log(`Province/State: ${result.region}`);
+      console.log(`Country: ${result.country}`);
+
+      const outputString = `${result.city}, ${result.region}, ${result.country}`;
+      setAddress(outputString);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    if (tutor && tutor.location) {
+      translateAddress(tutor.location);
+    }
+  }, [tutor]);
 
   /**
    * Simple constructing function to create a booking object for the tutee
    *
    * @returns object containing booking information for the tutee
    */
-  const constructTuteeBooking = () => {
+  const constructTuteeBooking = (code) => {
     return {
       bookingStatus: "CONFIRMED",
       hours: parseInt(hours),
-      id: Math.floor(Math.random() * (99999 - 1000) + 1000),
+      id: code,
       remote: remote == "Yes" ? true : false,
       service:
         selectedLanguage.length > 0 ? selectedLanguage : tutor.technologies[0],
@@ -95,9 +127,10 @@ export default function TutorInfo({
    *
    * @returns object containing booking information for the tutor
    */
-  const constructTutorBooking = () => {
+  const constructTutorBooking = (code) => {
     return {
       bookingStatus: "CONFIRMED",
+      id: code,
       customerEmail: userData.email,
       customerName: {
         first: userData.name.first,
@@ -176,9 +209,14 @@ export default function TutorInfo({
       validateDate();
       validateTime();
 
-      const tuteebooking = constructTuteeBooking();
+      const code = Math.floor(Math.random() * (99999 - 1000) + 1000);
 
-      const tutorbooking = constructTutorBooking();
+      const tuteebooking = constructTuteeBooking(code);
+
+      const tutorbooking = constructTutorBooking(code);
+
+      let updatedUserInfo = { ...userData };
+      let updatedTutorInfo = { ...tutor };
 
       updatedUserInfo.bookings.push(tuteebooking);
       //tuteebooking;
@@ -246,8 +284,7 @@ export default function TutorInfo({
           </Text>
           <Text>
             <Text style={{ fontWeight: "bold" }}>Tutor Address: </Text>
-            {tutor.location.address.streetNo}{" "}
-            {tutor.location.address.streetName}, {tutor.location.city}
+            {address}
           </Text>
           <Text>
             <Text style={{ fontWeight: "bold" }}>Tutor Experience: </Text>

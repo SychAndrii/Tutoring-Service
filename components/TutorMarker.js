@@ -3,38 +3,6 @@ import { View, Text, StyleSheet } from "react-native";
 import { Marker } from "react-native-maps";
 import { useIsFocused } from "@react-navigation/native";
 
-import * as Location from "expo-location";
-
-/**
- *
- * @param {*} address Human readable address ex: "125 Redpath Avenue, Toronto"
- * @returns object containing longitutde and latitude
- */
-const forwardGeocode = async (address) => {
-  try {
-    const geocodedLocation = await Location.geocodeAsync(address);
-    // console.log(geocodedLocation); // array of possible locations
-
-    const result = geocodedLocation[0];
-    if (result === undefined) {
-      alert("No coordinates found");
-      return;
-    }
-
-    // console.log(result);
-    // console.log(`Latitude: ${result.latitude}`);
-    // console.log(`Longitude: ${result.longitude}`);
-
-    return result;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-const constructAddress = (tutor) => {
-  return `${tutor.location.address.streetNo} ${tutor.location.address.streetName}, ${tutor.location.city}`;
-};
-
 export default function TutorMarker({ tutor, setTutorInfo }) {
   const [location, setLocation] = useState(null);
   const isFocused = useIsFocused();
@@ -44,11 +12,8 @@ export default function TutorMarker({ tutor, setTutorInfo }) {
   };
 
   const translateAddress = async () => {
-    const address = constructAddress(tutor);
-    const res = await forwardGeocode(address);
-    setLocation(res);
-    // console.log("Address: ", address);
-    // console.log("Forward Geocoded: ", res);
+    setLocation(tutor.location);
+    console.log("Tutor Address: ", tutor.location);
   };
 
   useEffect(() => {
@@ -59,7 +24,7 @@ export default function TutorMarker({ tutor, setTutorInfo }) {
 
   return (
     <View>
-      {location && (
+      {location && location.longitude && location.latitude && (
         <>
           <Marker
             coordinate={{
